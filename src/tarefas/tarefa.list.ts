@@ -1,0 +1,40 @@
+import { IPaginaListagem } from "../shared/IPagina.list.interface.js";
+import { IPaginaHTML } from "../shared/pagina.interface.js";
+import { IRepositorio } from "../shared/Repositorio.interface.js";
+import { Prioridade } from "./prioridade.enum.js";
+import { Tarefa } from "./tarefa.model.js";
+import { TarefaRepositoryLocalStorage } from "./tarefa.repository.local-storage.js";
+
+class TarefaPaginaListagem implements IPaginaHTML, IPaginaListagem{
+ 
+tabela: HTMLTableElement;
+ 
+constructor(private repositorioTarefas: IRepositorio<Tarefa>){
+  this.configurarElementos();
+
+  this.atualizarTabela();
+}
+  
+configurarElementos(): void{
+  this.tabela = document.getElementById("tabela") as HTMLTableElement;
+}
+
+atualizarTabela(): void {
+    const tarefas = this.repositorioTarefas.selecionarTodos();
+    
+    let corpoTabela = this.tabela.getElementsByTagName("tbody")[0];
+
+    tarefas.forEach(tarefa => {
+      const novaLinha = corpoTabela.insertRow();
+
+      Object.values(tarefa).forEach((valor: any) => {
+        const novaCelula = novaLinha.insertCell();
+
+        novaCelula.innerText = valor;
+      })
+
+    });
+  }
+}
+
+new TarefaPaginaListagem(new TarefaRepositoryLocalStorage);
