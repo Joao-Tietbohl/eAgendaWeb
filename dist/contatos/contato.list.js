@@ -1,7 +1,7 @@
-import { TarefaRepositoryLocalStorage } from "./tarefa.repository.local-storage.js";
-class TarefaPaginaListagem {
-    constructor(repositorioTarefas) {
-        this.repositorioTarefas = repositorioTarefas;
+import { ContatoRepositoryLocalStorage } from "./contato.repository.local-storage.js";
+class ContatoPaginaListagem {
+    constructor(repositorioContatos) {
+        this.repositorioContatos = repositorioContatos;
         this.configurarElementos();
         this.atualizarTabela();
     }
@@ -9,11 +9,11 @@ class TarefaPaginaListagem {
         this.tabela = document.getElementById("tabela");
     }
     atualizarTabela() {
-        const tarefas = this.repositorioTarefas.selecionarTodos();
+        const contatos = this.repositorioContatos.selecionarTodos();
         let corpoTabela = this.tabela.getElementsByTagName("tbody")[0];
-        tarefas.forEach(tarefa => {
+        contatos.forEach(contato => {
             const novaLinha = corpoTabela.insertRow();
-            Object.values(tarefa).forEach((valor) => {
+            Object.values(contato).forEach((valor) => {
                 const novaCelula = novaLinha.insertCell();
                 novaCelula.innerText = valor;
             });
@@ -23,14 +23,14 @@ class TarefaPaginaListagem {
             btnEditar.className = "btn btn-primary me-2";
             btnEditar.addEventListener("click", () => {
                 const idSelecionado = novaLinha.cells[0].innerText;
-                window.location.href = `tarefa.create.html?id=${idSelecionado}`;
+                window.location.href = `contato.create.html?id=${idSelecionado}`;
             });
             const btnExcluir = document.createElement("a");
             btnExcluir.innerText = "Excluir";
             btnExcluir.className = "btn btn-outline-warning";
             btnExcluir.addEventListener("click", () => {
-                const idSelecionado = tarefa.id;
-                this.repositorioTarefas.excluir(idSelecionado);
+                const idSelecionado = contato.id;
+                this.repositorioContatos.excluir(idSelecionado);
                 window.location.reload();
             });
             celulaBotoes.appendChild(btnEditar);
@@ -38,4 +38,4 @@ class TarefaPaginaListagem {
         });
     }
 }
-new TarefaPaginaListagem(new TarefaRepositoryLocalStorage);
+new ContatoPaginaListagem(new ContatoRepositoryLocalStorage);

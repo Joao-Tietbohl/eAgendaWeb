@@ -1,3 +1,4 @@
+import { Guid } from "../shared/guid.model.js";
 export class TarefaRepositoryLocalStorage {
     constructor() {
         this.localStorage = window.localStorage;
@@ -8,7 +9,22 @@ export class TarefaRepositoryLocalStorage {
         this.localStorage.setItem("tarefas", tarefasJsonString);
     }
     inserir(registro) {
+        registro.id = new Guid().gerarNovoId();
         this.tarefas.push(registro);
+        this.gravar();
+    }
+    editar(id, registroEditado) {
+        const indexSelecionado = this.tarefas.findIndex(x => x.id === id);
+        this.tarefas[indexSelecionado] = {
+            id: id,
+            descricao: registroEditado.descricao,
+            dataCriacao: registroEditado.dataCriacao,
+            prioridade: registroEditado.prioridade,
+        };
+        this.gravar();
+    }
+    excluir(id) {
+        this.tarefas = this.tarefas.filter(x => x.id !== id);
         this.gravar();
     }
     selecionarTodos() {
@@ -16,5 +32,8 @@ export class TarefaRepositoryLocalStorage {
         if (!dados)
             return [];
         return JSON.parse(dados);
+    }
+    selecionarPorId(id) {
+        return this.tarefas.find(x => x.id === id);
     }
 }

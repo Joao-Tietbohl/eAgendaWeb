@@ -1,15 +1,14 @@
 import { IPaginaListagem } from "../shared/IPagina.list.interface.js";
 import { IPaginaHTML } from "../shared/pagina.interface.js";
 import { IRepositorio } from "../shared/repositorio.interface.js";
-import { Prioridade } from "./prioridade.enum.js";
-import { Tarefa } from "./tarefa.model.js";
-import { TarefaRepositoryLocalStorage } from "./tarefa.repository.local-storage.js";
+import { Contato } from "./contato.model.js";
+import { ContatoRepositoryLocalStorage } from "./contato.repository.local-storage.js";
 
-class TarefaPaginaListagem implements IPaginaHTML, IPaginaListagem{
+class ContatoPaginaListagem implements IPaginaHTML, IPaginaListagem{
  
 tabela: HTMLTableElement;
  
-constructor(private repositorioTarefas: IRepositorio<Tarefa>){
+constructor(private repositorioContatos: IRepositorio<Contato>){
   this.configurarElementos();
 
   this.atualizarTabela();
@@ -20,14 +19,14 @@ configurarElementos(): void{
 }
 
 atualizarTabela(): void {
-    const tarefas = this.repositorioTarefas.selecionarTodos();
+    const contatos = this.repositorioContatos.selecionarTodos();
     
     let corpoTabela = this.tabela.getElementsByTagName("tbody")[0];
 
-    tarefas.forEach(tarefa => {
+    contatos.forEach(contato => {
       const novaLinha = corpoTabela.insertRow();
 
-      Object.values(tarefa).forEach((valor: any) => {
+      Object.values(contato).forEach((valor: any) => {
         const novaCelula = novaLinha.insertCell();
 
         novaCelula.innerText = valor;
@@ -42,7 +41,7 @@ atualizarTabela(): void {
       btnEditar.addEventListener("click", () => {
         const idSelecionado = novaLinha.cells[0].innerText;
 
-        window.location.href = `tarefa.create.html?id=${idSelecionado}`;
+        window.location.href = `contato.create.html?id=${idSelecionado}`;
       });
 
       const btnExcluir = document.createElement("a");
@@ -50,9 +49,9 @@ atualizarTabela(): void {
       btnExcluir.className = "btn btn-outline-warning";
 
       btnExcluir.addEventListener("click", () => {
-        const idSelecionado = tarefa.id;
+        const idSelecionado = contato.id;
 
-        this.repositorioTarefas.excluir(idSelecionado);
+        this.repositorioContatos.excluir(idSelecionado);
 
         window.location.reload();
       });
@@ -64,4 +63,4 @@ atualizarTabela(): void {
   }
 }
 
-new TarefaPaginaListagem(new TarefaRepositoryLocalStorage);
+new ContatoPaginaListagem(new ContatoRepositoryLocalStorage);
